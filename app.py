@@ -49,7 +49,7 @@ def update(todo_id):
     # Todos are filtered by given id
     todo = Todo.query.filter_by(id=todo_id).first()
     # That todo's completion is toggled
-    todo.complete = not todo.complte
+    todo.complete = not todo.complete
     # Database is updated
     db.session.commit()
     # Redirect back to homepage
@@ -69,7 +69,8 @@ def delete(todo_id):
 
 if __name__ == "__main__":
     # Creates database and tables
-    db.create_all()
-    # debug=True means server doesn't reload for changes in code
-    app.run(debug=True)
+    with app.app_context():
+        db.create_all()
+        # debug=True means server doesn't reload for changes in code
+        app.run(debug=True)
 
