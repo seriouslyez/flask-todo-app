@@ -23,26 +23,34 @@ class Todo(db.Model):
 
 # Every url/route needs a function and @app.route(**)
 
+
 # Homepage will list all the todos
+# #Routes allow binding a function to a URL. Here we create a route to our home page
 @app.route('/')
 def home():
     # List of todos pulled from database
     todo_list = Todo.query.all()
     # HTML rendered of todo list
+    # #Templates allow a base model for an app that can be built off of. 
     return render_template("base.html", todo_list=todo_list)
 
+# #Route allows us to add todo function to the add button
 # Route to add new todo
 @app.route("/add", methods=["POST"])
 def add():
     # New todo is created 
+    #Requests allow accessing data from a form 
     title = request.form.get("title")
     new_todo = Todo(title=title, complete=False)
     # Database is updated
+    # #Sessions allow storing information specific to a user, so we save a new todo for the current user
     db.session.add(new_todo)
     db.session.commit()
     # Redirect back to homepage
+    # #Redirects allow me to send the user to another endpoint
     return redirect(url_for("home"))
 
+# #Route allows us to link an update function with to the update URL
 # Route to update a certain todo's completion
 @app.route("/update/<int:todo_id>")
 def update(todo_id):
@@ -51,10 +59,13 @@ def update(todo_id):
     # That todo's completion is toggled
     todo.complete = not todo.complete
     # Database is updated
+    # #Session allows us to update our todo in the DB for the current user
     db.session.commit()
     # Redirect back to homepage
+    # #Redirects allow me to send the user to another endpoint
     return redirect(url_for("home"))
 
+# #Route allows us to link a delete function to a url
 # Route to delete a todo
 @app.route("/delete/<int:todo_id>")
 def delete(todo_id):
@@ -63,8 +74,10 @@ def delete(todo_id):
     # That todo is deleted from the database
     db.session.delete(todo)
     # Database is updated
+    # #Session allows us to reflect a deleted todo for our current user 
     db.session.commit()
     # Redirect back to homepage
+    # #Redirects allow me to send the user to another endpoint
     return redirect(url_for("home"))
 
 if __name__ == "__main__":
